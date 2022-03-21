@@ -11,7 +11,7 @@ yres = zeros(2, length(t));
 for i = 1:length(t)
   k1 = funkcja(t(i), y);
   k2 = funkcja(t(i) + h, y + h*k1);
-  yres(:, i) = y+ (0.5*h).*(k1 + k2);
+  yres(:, i) = y + (0.5*h).*(k1 + k2);
   y = yres(:, i);
 end
 
