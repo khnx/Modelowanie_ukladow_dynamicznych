@@ -40,4 +40,4 @@ Przekształcić równanie różniczkowe i stworzyć układ równań. Wyznaczyć 
 
 # Tabele określające współczynniki kolejnych wartości x i y.
 
-![Tabele określające wartości współczynników Y i X]("tabelaYX.png")
+![Tabele określające wartości współczynników Y i X](tabelaYX.png)
