@@ -1,21 +1,19 @@
 clear;clc;close all;
-k = 6.9;
-T = 21.37;
 
-mom = tf(k, [T, 1]);
+obj = tf(1, [2 2 0]);
 
 figure(1);
-step(mom);
+step(obj);
 grid on;
 
 figure(2);
-impulse(mom);
+impulse(obj);
 grid on;
 
 figure(3);
-nyquist(mom);
+nyquist(obj);
 grid on;
 
 figure(4);
-bode(mom);
+bode(obj);
 grid on;
