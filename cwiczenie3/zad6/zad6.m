@@ -5,10 +5,11 @@ k = 5;
 T0 = 3.4;
 T = 1;
 
-[lp, mp] = pade(T0, 1);
-[lo, mo] = series();
+% Nie działa.
+% [lp, mp] = pade(T0, 0);
+% [lo, mo] = series(k, [T, 1], lp, mp);
 
-obiekt_inercyjny = tf(lo, mo);
+obiekt_inercyjny = tf(k, [T, 1], 'InputDelay', 3.4);
 
 % Charakterystyka skokowa.
 figure(1);

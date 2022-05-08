@@ -9,20 +9,21 @@ obiekt_inercyjny = tf(k, [T, 1]);
 
 % Charakterystyka skokowa.
 figure(1);
+subplot(2,2,1);
 step(obiekt_inercyjny);
 grid on;
 
 % Charakterystyka impulsowa.
-figure(2);
+subplot(2,2,2);
 impulse(obiekt_inercyjny);
 grid on;
 
 % Charakterystyka Nyquista.
-figure(3);
+subplot(2,2,3);
 nyquist(obiekt_inercyjny);
 grid on;
 
 % Charakterystyka Bodego.
-figure(4);
+subplot(2,2,4);
 bode(obiekt_inercyjny);
 grid on;
