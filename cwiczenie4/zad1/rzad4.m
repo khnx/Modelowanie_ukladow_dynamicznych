@@ -6,34 +6,28 @@ T = 3.5; % Stała czasowa.
 T1 = 1.5; % Stała czasowa.
 T2 = 2.5; % Stała czasowa.
 T0 = 0.7; % Opóźnienie.
-zeta = 0.35; % Współczynnik tłumienia.
 
 % Czas.
 Ts = 0.5; % Czas próbkowania.
-t = 0:Ts:15; % zakres zmiennej czasu
+t = 0:Ts:30; % zakres zmiennej czasu
 
 % Stwórz obiekt inercyjny.
 s = tf('s'); % Definicja operatora Laplace'a.
-Iner = k / ((1 + s*T) * (1 + s*T1) * (1 + s*T2) * (1 + s*T0)); % Obiekt inercyjny III rzędu.
+Iner = k / ((1 + s * T) * (1 + s * T1) * (1 + s * T2) * (1 + s * T0)); % Obiekt inercyjny IV rzędu.
+Iner_ZOH = c2d(Iner, Ts, 'zoh'); % Dyskretyzacja metodą ZOH.
+Iner_Tustin = c2d(Iner, Ts, 'tustin'); % Dyskretyzacja metodą Tustina.
 
-% Charakterystyka skokowa, wykres ciągły.
-fig1 = figure(1); % Otwarcie okna graficznego o numerze 1/
-[Yc, time] = step(Iner, t); % Odpowiedź układu na wymuszenie skokowe.
-plot(t, Yc); % Graficzna charakterystyka odpowiedzi członu ciągłego na wymuszenie skokowe.
-hold all; % Zablokowanie okna graficznego.
+figure(1)
 
-[A, B, C, D] = tf2ss(Iner.num{1}, Iner.den{1}); % Przejście z transfer function do space state.
-P = expm(Ts * A);
-I = eye(4); % Zdefiniowanie macierzy jednostkowej.
-Q = (P - I) * A^(-1) * B;
-U = ones(size(t)); % Określenie jednostkowego wektora sterowań.
-X(:, 1) = zeros(size(A,1), 1);
+% Odpowiedź na wymuszenie skokowe.
+[W, time] = step(Iner, t);
+[Wd, time] = step(Iner_ZOH, t); % Układ ZOH.
+[Wd1, time] = step(Iner_Tustin, t); % Układ Tustina.
 
-for i = 2:size(t, 2)
-    X(:, i) = P * X(:, i - 1) + Q * U(i - 1);
-end
+% Charakterystyka odpowiedzi skokowej.
+plot(t, W); hold all;
+stairs(t, Wd);
+stairs(t, Wd1);
 
-Y = C * X + D * U; % Odpowiedź układu.
-stairs(t, Y); % Wykres schodkowy odpowiedzi układu.
+legend('Ciągły', "ZOH", "Tustin");
 grid on;
-legend('Obiekt ciągły', 'Obiekt dyskretny ZOH','Location', 'Best');

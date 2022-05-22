@@ -3,8 +3,7 @@ clear; close all; clc; %czyszczenie workspace
 % Stałe.
 k = 3.5; % Wzmocnienie układu inercyjnego.
 T = 3.5; % Stała czasowa.
-T1 = 1.5; % Stała czasowa.
-T2 = 2.5; % Stała czasowa.
+zeta = 0.35; % Współczynnik tłumienia.
 
 % Czas.
 Ts = 0.5; % Czas próbkowania.
@@ -12,7 +11,7 @@ t = 0:Ts:30; % zakres zmiennej czasu
 
 % Stwórz obiekt inercyjny.
 s = tf('s'); % Definicja operatora Laplace'a.
-Iner = k / ((1 + s * T) * (1 + s * T1) * (1 + s * T2)); % Obiekt inercyjny III rzędu.
+Iner = k / (T^2 * s^2 + 2 * zeta * T * s + 1); % Obiekt całkujący z inercją.
 Iner_ZOH = c2d(Iner, Ts, 'zoh'); % Dyskretyzacja metodą ZOH.
 Iner_Tustin = c2d(Iner, Ts, 'tustin'); % Dyskretyzacja metodą Tustina.
 
