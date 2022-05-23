@@ -1,9 +1,9 @@
 clear; close all; clc;
 % Transmitancja G(s) = k / (Ts + 1) exp(-s*T0)
 % Stałe:
-k = 5;
-T0 = 3.4;
-T = 1;
+k = 3.5;
+T0 = 0.7;
+T = 3.5;
 
 % Nie działa.
 % [lp, mp] = pade(T0, 0);

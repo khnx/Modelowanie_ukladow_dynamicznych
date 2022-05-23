@@ -1,11 +1,11 @@
 clear; close all; clc;
 % Transmitancja G(s) = k / (T0*2s^2 + 2*x*T0*s + 1)
 % Stałe:
-k = 2;
-T0 = 2;
-x = 0.5;
+k = 3.5;
+T0 = 0.7;
+zeta = 0.35;
 
-obiekt_inercyjny = tf(k, [T0^2, 2*x*T0, 1]);
+obiekt_inercyjny = tf(k, [T0^2, 2*zeta*T0, 1]);
 
 % Charakterystyka skokowa.
 figure(1);

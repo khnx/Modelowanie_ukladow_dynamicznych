@@ -1,8 +1,8 @@
 clear; close all; clc;
 % Transmitancja G(s) = k / s(Ts + 1)
 % Stałe:
-k = 4;
-T = 2;
+k = 3.5;
+T = 3.5;
 
 obiekt_inercyjny = tf(k, [T, 1, 0]);
 
