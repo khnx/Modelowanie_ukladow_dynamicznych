@@ -8,10 +8,8 @@ Charakterystyki czasowe wyznaczamy przez rozwiązanie równań różniczkowych, 
 
 ###Skokowa - wymuszenie ma postać funkcji złożonej
   
-	```
 	A dla t >= 0
 	0 dla t < 0
-	```
 
 A to amplituda.
 
@@ -22,10 +20,8 @@ Działając wymuszeniem skokowym na dany obiekt inercyjny uzyskujemy charakterys
 
 ### Impulsowa - wymuszenie ma postać funkcji Diraca
 
-	```
 	inf dla t = 0
 	0 dla t != 0
-	```
 
 Całka na zbiorze R z funkcji Diraca to 1.
 
