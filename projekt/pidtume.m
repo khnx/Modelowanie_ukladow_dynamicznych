@@ -1,44 +1,66 @@
 clear; close all; clc;
 
-time = 0:0.01:50;
+time = 0:0.01:150; % Czas.
 
-%% Stwórz obiekt inercyjny dla kontrolera PID
-num = 4.5;
-denum = [15, 8, 1];
-T0 = 2;
-Gs = tf(num, denum, "InputDelay", T0);
+% Stwórz obiekt inercyjny dla kontrolera PID
+num = 4.5; % Licznik.
+denum = [15, 8, 1]; % Mianownik.
+T0 = 2; % Opóźnienie.
+Gs = tf(num, denum, "InputDelay", T0); % Obiekt inercyjny.
 
-T_osc = 12.788;
-Kkr = 1.05;
-Kp = 0.46 * Kkr;
-Ti = T_osc * 0.5;
-Td = T_osc / 8;
-T = 1;
+T_osc = 12.788; % Czas oscylacji.
+Kkr = 1.05; % Wzmocnienie krytyczne.
+% PID
+Kp = 0.6 * Kkr; % Współcznynnik wzmocnienia regulatora PID.
+Ti = T_osc * 0.5; % Stała czasowa dla regulatora PID, dla obiektu całkującego.
+Td = T_osc / 8; % Stała czasowa dla regulatora PID, dla obiektu różniczkującego.
+T = 1; % Stła czasowa dla regulatora PID, dla obiektu różniczkującego.
+% PI
+Kpp = 0.45 * Kkr; % Współczynnik wzmocnienia regulatora PI.
+Tii = T_osc / 1.2; % Stała czasowa dla regulatora PI, dla obiektu całkującego.
 
-Controller = pid(Kp, Kp / Ti, Kp * Td, T);
+% Stworzenie kontrolera PID
+CPID = pid(Kp, Kp / Ti, Kp * Td, T);
+% Stworzenie kontrolera PI
+CPI = pid(Kpp, Kpp / Ti);
 
-C = pidtune(Gs, "PID");
+% Stworzenie obiektu inercyjnego z regulatorem.
+TrefPID = getPIDLoopResponse(CPID, Gs, "closed-loop");
+TrefPI = getPIDLoopResponse(CPI, Gs, "closed-loop");
 
-Tref_closed = getPIDLoopResponse(Controller, Gs, "closed-loop");
-
+% Charakterystyka skokowa.
 figure(1);
-step(time, Tref_closed);grid on;
-title("Step Response of the PID Controller");
+step(time, Gs);grid on; hold on;
+step(time, TrefPI)
+step(time, TrefPID); hold off;
+title("Charakterystyka Skokowa");
+legend("Gs", "PI", "PID");
 
-sys = pade(Tref_closed, 0);
+% Zaproksymuj obiekt inercyjny.
+sysGs = pade(Gs, 2);
+sysPI = pade(TrefPI, 2);
+sysPID = pade(TrefPID, 2);
 
+% Charakterystyka impulsowa.
 figure(2);
-impulse(time, sys);grid on;
-title("Impulse response of the PID Controller");
+impulse(time, sysGs); grid on; hold on;
+impulse(time, sysPI);
+impulse(time, sysPID); hold off;
+title("Charakterystyka Impulsowa");
+legend("Gs", "PI", "PID");
 
+% Charakterystyka Nyquista.
 figure(3);
-nyquist(time, Tref_closed); grid on;
-title("Nyquist Response of the PID Controller");
+nyquist(time, Gs); grid on; hold on;
+nyquist(time, TrefPI);
+nyquist(time, TrefPID); hold off;
+title("Charakterystyka Nyquista");
+legend("Gs", "PI", "PID");
 
+% Charakterystyka Bodego.
 figure(4);
-bode(time, Tref_closed); grid on;
-title("Bode Response of the PID Controller");
-
-figure(5);
-pzmap(Tref_closed); grid on;
-title("Poles and Zeros of the PID Controller");
+bode(time, Gs); grid on; hold on;
+bode(time, TrefPI);
+bode(time, TrefPID); hold off;
+title("Charakterystyka Bodego");
+legend("Gs", "PI", "PID");
