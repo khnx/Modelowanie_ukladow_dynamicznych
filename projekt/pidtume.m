@@ -1,6 +1,6 @@
 clear; close all; clc;
 
-time = 0:0.01:150; % Czas.
+time = 0:0.01:5; % Czas.
 
 % Stwórz obiekt inercyjny dla kontrolera PID
 num = 4.5; % Licznik.
@@ -28,39 +28,48 @@ CPI = pid(Kpp, Kpp / Ti);
 TrefPID = getPIDLoopResponse(CPID, Gs, "closed-loop");
 TrefPI = getPIDLoopResponse(CPI, Gs, "closed-loop");
 
+% Zaproksymuj obiekt inercyjny.
+sysGs = pade(Gs, 5);
+sysPI = pade(TrefPI, 5);
+sysPID = pade(TrefPID, 5);
+
 % Charakterystyka skokowa.
 figure(1);
-step(time, Gs);grid on; hold on;
-step(time, TrefPI)
-step(time, TrefPID); hold off;
+step(sysGs);grid on; hold on;
+step(TrefPI)
+step(TrefPID); hold off;
 title("Charakterystyka Skokowa");
 legend("Gs", "PI", "PID");
 
-% Zaproksymuj obiekt inercyjny.
-sysGs = pade(Gs, 2);
-sysPI = pade(TrefPI, 2);
-sysPID = pade(TrefPID, 2);
-
 % Charakterystyka impulsowa.
 figure(2);
-impulse(time, sysGs); grid on; hold on;
-impulse(time, sysPI);
-impulse(time, sysPID); hold off;
+impulse(sysGs); grid on; hold on;
+impulse(sysPI);
+impulse(sysPID); hold off;
 title("Charakterystyka Impulsowa");
 legend("Gs", "PI", "PID");
 
 % Charakterystyka Nyquista.
 figure(3);
-nyquist(time, Gs); grid on; hold on;
-nyquist(time, TrefPI);
-nyquist(time, TrefPID); hold off;
+nyquist(Gs); grid on; hold on;
+nyquist(TrefPI);
+nyquist(TrefPID); hold off;
 title("Charakterystyka Nyquista");
 legend("Gs", "PI", "PID");
 
+[tuned, info] = pidtune(Gs, "PID");
+T_pi = feedback(tuned * Gs, 1);
+figure(10);
+step(T_pi);
+figure(11);
+bode(T_pi);
+
 % Charakterystyka Bodego.
 figure(4);
-bode(time, Gs); grid on; hold on;
-bode(time, TrefPI);
-bode(time, TrefPID); hold off;
+bode(Gs);
+title("Charakterystyka Bodego Gs");
+figure(5);
+bode(TrefPI); grid on; hold on;
+bode(TrefPID); hold off;
 title("Charakterystyka Bodego");
-legend("Gs", "PI", "PID");
+legend("PI", "PID");
