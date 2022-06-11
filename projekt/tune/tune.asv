@@ -33,17 +33,14 @@ Gs_PI_Open = getPIDLoopResponse(C_PI, Gs_Open, "open-loop");
 Gs_PID_Open = getPIDLoopResponse(C_PID, Gs_Open, "open-loop");
 
 %% Wykresy Bodego.
-figure(1);
 bode(Gs_PI_Open); grid on; hold on;
 bode(Gs_PID_Open); hold off;
 legend("PI", "PID");
 title("Charakterystyki Bodego, układ otwarty");
 
 % Marginesy
-figure(2);
-margin(Gs_PI_Open); grid on;
-figure(3);
-margin(Gs_PID_Open); grid on;
+margin(Gs_PI_Open); grid on; hold on;
+margin(Gs_PID_Open); 
 
 %% Wykresy Nyquista.
 figure(4);
